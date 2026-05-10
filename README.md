@@ -1,4 +1,4 @@
-# GPU Monitor
+# Ubuntu GPU-CPU Monitor Dashboard
 
 A modern, real-time GPU + CPU dashboard for Ubuntu. Runs as a native desktop app — click the icon, browser opens, done. No Grafana, no Prometheus, no bloat.
 
