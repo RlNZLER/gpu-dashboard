@@ -1,16 +1,14 @@
 import subprocess
-import json
 import time
 from collections import deque
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse, JSONResponse
-from fastapi.staticfiles import StaticFiles
 import uvicorn
 import os
 
 app = FastAPI()
 
-HISTORY_LEN = 120  # 2 minutes of history at 1s polling
+HISTORY_LEN = 120
 
 history = {
     "util": deque([0] * HISTORY_LEN, maxlen=HISTORY_LEN),
@@ -22,7 +20,27 @@ history = {
 latest = {}
 
 
+def safe_float(val, fallback=None):
+    if val in ("[N/A]", "N/A", ""):
+        return fallback
+    try:
+        return float(val)
+    except ValueError:
+        return fallback
+
+
+def safe_int(val, fallback=None):
+    if val in ("[N/A]", "N/A", ""):
+        return fallback
+    try:
+        return int(float(val))
+    except ValueError:
+        return fallback
+
+
 def query_nvidia_smi():
+    # power.draw.instant is more reliable on some laptop GPUs.
+    # power.max_limit is a fallback when power.limit returns N/A (common on mobile GPUs).
     fields = [
         "name",
         "driver_version",
@@ -32,7 +50,9 @@ def query_nvidia_smi():
         "memory.total",
         "temperature.gpu",
         "power.draw",
+        "power.draw.instant",
         "power.limit",
+        "power.max_limit",
         "fan.speed",
         "clocks.current.graphics",
         "clocks.current.memory",
@@ -52,30 +72,40 @@ def query_nvidia_smi():
             parts = [p.strip() for p in line.split(",")]
             if len(parts) < len(fields):
                 continue
+
+            # Power draw: prefer power.draw, fall back to power.draw.instant
+            power_draw = safe_float(parts[7]) or safe_float(parts[8]) or 0.0
+            # Power limit: prefer power.limit, fall back to power.max_limit
+            power_limit = safe_float(parts[9]) or safe_float(parts[10]) or 0.0
+            # Fan: None means not exposed by driver (most laptop GPUs)
+            fan_speed = safe_int(parts[11])
+
             gpus.append({
                 "name": parts[0],
                 "driver": parts[1],
-                "util_gpu": int(parts[2]) if parts[2] != "[N/A]" else 0,
-                "util_mem": int(parts[3]) if parts[3] != "[N/A]" else 0,
-                "mem_used_mb": int(parts[4]) if parts[4] != "[N/A]" else 0,
-                "mem_total_mb": int(parts[5]) if parts[5] != "[N/A]" else 0,
-                "temp": int(parts[6]) if parts[6] != "[N/A]" else 0,
-                "power_draw": float(parts[7]) if parts[7] not in ["[N/A]", "N/A"] else 0.0,
-                "power_limit": float(parts[8]) if parts[8] not in ["[N/A]", "N/A"] else 0.0,
-                "fan_speed": int(parts[9]) if parts[9] != "[N/A]" else 0,
-                "clock_gpu_mhz": int(parts[10]) if parts[10] != "[N/A]" else 0,
-                "clock_mem_mhz": int(parts[11]) if parts[11] != "[N/A]" else 0,
-                "pcie_gen": parts[12] if parts[12] != "[N/A]" else "N/A",
+                "util_gpu": safe_int(parts[2], 0),
+                "util_mem": safe_int(parts[3], 0),
+                "mem_used_mb": safe_int(parts[4], 0),
+                "mem_total_mb": safe_int(parts[5], 0),
+                "temp": safe_int(parts[6], 0),
+                "power_draw": round(power_draw, 1),
+                "power_limit": round(power_limit, 1),
+                "fan_speed": fan_speed,
+                "fan_available": fan_speed is not None,
+                "clock_gpu_mhz": safe_int(parts[12], 0),
+                "clock_mem_mhz": safe_int(parts[13], 0),
+                "pcie_gen": parts[14] if parts[14] not in ("[N/A]", "N/A") else "N/A",
             })
         return gpus
-    except Exception as e:
+    except Exception:
         return None
 
 
 def query_processes():
     try:
         result = subprocess.run(
-            ["nvidia-smi", "--query-compute-apps=pid,process_name,used_gpu_memory", "--format=csv,noheader,nounits"],
+            ["nvidia-smi", "--query-compute-apps=pid,process_name,used_gpu_memory",
+             "--format=csv,noheader,nounits"],
             capture_output=True, text=True, timeout=5
         )
         if result.returncode != 0:
@@ -89,7 +119,7 @@ def query_processes():
                 procs.append({
                     "pid": parts[0],
                     "name": os.path.basename(parts[1]),
-                    "vram_mb": int(parts[2]) if parts[2] != "[N/A]" else 0,
+                    "vram_mb": safe_int(parts[2], 0),
                 })
         return procs
     except Exception:
@@ -97,7 +127,6 @@ def query_processes():
 
 
 def poll():
-    """Background polling — call this once to seed latest and history."""
     gpus = query_nvidia_smi()
     if gpus:
         g = gpus[0]
@@ -108,13 +137,11 @@ def poll():
         history["util"].append(g["util_gpu"])
         history["mem_util"].append(g["util_mem"])
         history["temp"].append(g["temp"])
-        history["power"].append(round(g["power_draw"], 1))
+        history["power"].append(g["power_draw"])
     else:
-        # No GPU / nvidia-smi not available — fill with demo data so the UI still works
         import math, random
         t = time.time()
-        util = int(50 + 30 * math.sin(t * 0.3) + random.randint(-5, 5))
-        util = max(0, min(100, util))
+        util = max(0, min(100, int(50 + 30 * math.sin(t * 0.3) + random.randint(-5, 5))))
         mem_used = 7200 + random.randint(-200, 200)
         temp = 68 + random.randint(-3, 3)
         power = 170 + random.randint(-10, 20)
@@ -126,9 +153,10 @@ def poll():
             "mem_used_mb": mem_used,
             "mem_total_mb": 12288,
             "temp": temp,
-            "power_draw": power,
+            "power_draw": float(power),
             "power_limit": 285.0,
             "fan_speed": 55,
+            "fan_available": True,
             "clock_gpu_mhz": 2535,
             "clock_mem_mhz": 10501,
             "pcie_gen": "4",
@@ -137,14 +165,14 @@ def poll():
         latest["gpus"] = [demo]
         latest["processes"] = [
             {"pid": "18432", "name": "python3", "vram_mb": 6144},
-            {"pid": "3210",  "name": "firefox", "vram_mb": 768},
-            {"pid": "4087",  "name": "code",    "vram_mb": 384},
+            {"pid": "3210",  "name": "firefox",  "vram_mb": 768},
+            {"pid": "4087",  "name": "code",     "vram_mb": 384},
         ]
         latest["ts"] = t
         history["util"].append(util)
         history["mem_util"].append(demo["util_mem"])
         history["temp"].append(temp)
-        history["power"].append(power)
+        history["power"].append(float(power))
 
 
 @app.on_event("startup")

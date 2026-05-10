@@ -655,7 +655,7 @@
       const tc = tempColor(g.temp);
       document.getElementById('c-temp').textContent = g.temp + '°C';
       document.getElementById('c-temp').style.color = tc;
-      document.getElementById('c-fan').textContent = 'Fan ' + g.fan_speed + '%';
+      document.getElementById('c-fan').textContent = g.fan_available ? 'Fan ' + g.fan_speed + '%' : 'Fan N/A (laptop GPU)';
       setW('bar-temp', pct(g.temp, 100));
 
       const vramPct = pct(g.mem_used_mb, g.mem_total_mb);
@@ -663,9 +663,9 @@
       document.getElementById('c-vram-sub').textContent = 'of ' + mb2gb(g.mem_total_mb) + ' GB · ' + vramPct + '%';
       setW('bar-vram', vramPct);
 
-      const powerPct = g.power_limit > 0 ? pct(g.power_draw, g.power_limit) : 0;
+      const powerPct = g.power_limit > 0 ? pct(g.power_draw, g.power_limit) : 100;
       document.getElementById('c-power').textContent = Math.round(g.power_draw) + 'W';
-      document.getElementById('c-power-sub').textContent = 'limit ' + Math.round(g.power_limit) + ' W · ' + powerPct + '%';
+      document.getElementById('c-power-sub').textContent = g.power_limit > 0 ? 'limit ' + Math.round(g.power_limit) + ' W · ' + powerPct + '%' : 'TDP limit unavailable';
       setW('bar-power', powerPct);
 
       // Charts
@@ -685,15 +685,15 @@
       set('sv-power', Math.round(g.power_draw) + 'W');
       setW('ss-temp', pct(g.temp, 100));
       set('sv-temp', g.temp + '°C');
-      setW('ss-fan', g.fan_speed);
-      set('sv-fan', g.fan_speed + '%');
+      setW('ss-fan', g.fan_available ? g.fan_speed : 0);
+      set('sv-fan', g.fan_available ? g.fan_speed + '%' : 'N/A');
 
       // Info grid
       set('inf-gpuclk', g.clock_gpu_mhz.toLocaleString() + ' MHz');
       set('inf-memclk', g.clock_mem_mhz.toLocaleString() + ' MHz');
       set('inf-pcie', 'Gen ' + g.pcie_gen);
       set('inf-vramtot', mb2gb(g.mem_total_mb) + ' GB');
-      set('inf-powlim', Math.round(g.power_limit) + ' W');
+      set('inf-powlim', g.power_limit > 0 ? Math.round(g.power_limit) + ' W' : 'N/A');
 
       // Processes
       const procs = g.processes || [];
