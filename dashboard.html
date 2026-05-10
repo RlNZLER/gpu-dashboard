@@ -18,7 +18,7 @@
     --border: rgba(255,255,255,0.07);
     --border-bright: rgba(255,255,255,0.13);
     --text: #e8eaed;
-    --muted: #6e7680;
+    --muted: #8f9aa6;
     --dim: #3a3f47;
     --green: #4ade80;
     --green-dim: rgba(74,222,128,0.12);
@@ -30,7 +30,9 @@
     --blue-dim: rgba(96,165,250,0.12);
     --purple: #a78bfa;
     --teal: #2dd4bf;
-    --accent: #4ade80;
+    --teal-dim: rgba(45,212,191,0.12);
+    --orange: #fb923c;
+    --orange-dim: rgba(251,146,60,0.12);
     --radius: 10px;
     --mono: 'JetBrains Mono', monospace;
     --sans: 'Syne', sans-serif;
@@ -45,355 +47,228 @@
     line-height: 1.5;
   }
 
-  /* ── Layout ── */
   .shell {
     max-width: 1400px;
     margin: 0 auto;
     padding: 24px 28px 48px;
   }
 
-  /* ── Header ── */
+  /* ── Topbar ── */
   .topbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 28px;
+    margin-bottom: 24px;
     padding-bottom: 18px;
     border-bottom: 1px solid var(--border);
   }
-
-  .topbar-left {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-
+  .topbar-left { display: flex; align-items: center; gap: 14px; }
   .logo-box {
     width: 36px; height: 36px;
     background: var(--green);
     border-radius: 8px;
     display: flex; align-items: center; justify-content: center;
   }
-
   .logo-box svg { width: 20px; height: 20px; }
-
-  .app-title {
-    font-family: var(--sans);
-    font-size: 17px;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    color: var(--text);
-  }
-
-  .gpu-name-tag {
-    font-size: 11px;
-    color: var(--muted);
-    margin-top: 1px;
-  }
-
-  .topbar-right {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
-
-  .driver-tag {
-    font-size: 11px;
-    color: var(--muted);
-  }
-
+  .app-title { font-family: var(--sans); font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
+  .gpu-name-tag { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .topbar-right { display: flex; align-items: center; gap: 20px; }
+  .driver-tag { font-size: 11px; color: var(--muted); }
   .live-pill {
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    display: flex; align-items: center; gap: 6px;
     background: var(--green-dim);
     border: 1px solid rgba(74,222,128,0.2);
     border-radius: 20px;
     padding: 4px 12px;
-    font-size: 11px;
-    color: var(--green);
-    font-weight: 500;
+    font-size: 11px; color: var(--green); font-weight: 500;
   }
-
   .dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
+    width: 6px; height: 6px; border-radius: 50%;
     background: var(--green);
     animation: blink 1.8s ease-in-out infinite;
   }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
 
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.2; }
+  /* ── Section dividers ── */
+  .section-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
   }
 
-  /* ── Metric cards ── */
+  /* ── Cards ── */
   .cards {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 12px;
-    margin-bottom: 18px;
+    gap: 10px;
+    margin-bottom: 10px;
   }
-
   .card {
     background: var(--bg2);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 18px 20px 16px;
+    padding: 16px 18px 14px;
     position: relative;
     overflow: hidden;
     transition: border-color 0.2s;
   }
-
   .card:hover { border-color: var(--border-bright); }
-
   .card-accent {
-    position: absolute;
-    top: 0; left: 0; right: 0;
+    position: absolute; top: 0; left: 0; right: 0;
     height: 2px;
     border-radius: var(--radius) var(--radius) 0 0;
   }
-
   .card-label {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #8f9aa6;
-    margin-bottom: 10px;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 8px;
   }
-
   .card-value {
-    font-family: var(--mono);
-    font-size: 28px;
-    font-weight: 600;
-    line-height: 1;
-    margin-bottom: 8px;
+    font-size: 26px; font-weight: 600;
+    line-height: 1; margin-bottom: 6px;
     transition: color 0.3s;
   }
-
-  .card-sub {
-    font-size: 12.5px;
-    color: #8f9aa6;
-  }
-
-  .card-bar {
-    margin-top: 12px;
-    height: 3px;
-    background: var(--bg3);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-
-  .card-bar-fill {
-    height: 100%;
-    border-radius: 2px;
-    transition: width 0.6s ease;
-  }
+  .card-sub { font-size: 12.5px; color: var(--muted); }
+  .card-bar { margin-top: 10px; height: 3px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
+  .card-bar-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
 
   /* ── Charts row ── */
   .charts-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 18px;
+    gap: 10px;
+    margin-bottom: 10px;
   }
-
   .panel {
     background: var(--bg2);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 18px 20px;
+    padding: 16px 18px;
   }
-
   .panel-header {
-    display: flex;
-    align-items: center;
+    display: flex; align-items: center;
     justify-content: space-between;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
   }
-
   .panel-title {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #8f9aa6;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--muted);
   }
-
-  .panel-value {
-    font-size: 12px;
-    font-weight: 500;
-  }
-
-  .chart-wrap {
-    position: relative;
-    height: 140px;
-  }
+  .panel-value { font-size: 12px; font-weight: 500; }
+  .chart-wrap { position: relative; height: 130px; }
 
   /* ── Details row ── */
   .details-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 18px;
+    gap: 10px;
+    margin-bottom: 10px;
   }
 
   /* ── Subsystem bars ── */
-  .subsys-list { display: flex; flex-direction: column; gap: 13px; }
-
+  .subsys-list { display: flex; flex-direction: column; gap: 11px; }
   .subsys-item {
     display: grid;
-    grid-template-columns: 80px 1fr 48px;
-    align-items: center;
-    gap: 10px;
+    grid-template-columns: 90px 1fr 52px;
+    align-items: center; gap: 10px;
   }
+  .subsys-label { font-size: 12px; color: var(--muted); }
+  .track { height: 5px; background: var(--bg3); border-radius: 3px; overflow: hidden; }
+  .fill { height: 100%; border-radius: 3px; transition: width 0.7s cubic-bezier(0.4,0,0.2,1); }
+  .subsys-val { font-size: 12px; font-weight: 500; text-align: right; }
 
-  .subsys-label { font-size: 12px; color: #8f9aa6; }
-
-  .track {
-    height: 5px;
-    background: var(--bg3);
-    border-radius: 3px;
-    overflow: hidden;
-  }
-
-  .fill {
-    height: 100%;
-    border-radius: 3px;
-    transition: width 0.7s cubic-bezier(0.4,0,0.2,1);
-  }
-
-  .subsys-val {
-    font-size: 12px;
-    font-weight: 500;
-    text-align: right;
-  }
-
-  /* ── Clock info ── */
-  .info-grid {
+  /* ── Per-core grid ── */
+  .core-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(52px, 1fr));
+    gap: 6px;
+    margin-top: 4px;
   }
-
-  .info-item {
+  .core-cell {
     background: var(--bg3);
-    border-radius: 7px;
-    padding: 11px 14px;
+    border-radius: 6px;
+    padding: 7px 6px 5px;
+    text-align: center;
   }
+  .core-num { font-size: 9px; color: var(--dim); letter-spacing: 0.05em; margin-bottom: 4px; }
+  .core-bar-track { height: 3px; background: var(--bg0); border-radius: 2px; overflow: hidden; margin-bottom: 4px; }
+  .core-bar-fill { height: 100%; border-radius: 2px; background: var(--teal); transition: width 0.6s ease; }
+  .core-pct { font-size: 10px; font-weight: 500; color: var(--teal); }
 
-  .info-item-label {
-    font-size: 11px;
-    color: #8f9aa6;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    margin-bottom: 5px;
-  }
-
-  .info-item-val {
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--text);
-  }
+  /* ── Info grid ── */
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .info-item { background: var(--bg3); border-radius: 7px; padding: 10px 13px; }
+  .info-item-label { font-size: 11px; color: var(--muted); letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 4px; }
+  .info-item-val { font-size: 15px; font-weight: 500; color: var(--text); }
 
   /* ── Process table ── */
   .proc-panel {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    margin-bottom: 18px;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden; margin-bottom: 10px;
   }
-
   .proc-head {
     display: grid;
-    grid-template-columns: 2.5fr 90px 100px 100px 80px;
-    padding: 10px 20px;
-    background: var(--bg3);
-    border-bottom: 1px solid var(--border);
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    color: #8f9aa6;
+    grid-template-columns: 2fr 70px minmax(0,1fr) minmax(0,1fr) 80px;
+    column-gap: 16px;
+    padding: 9px 18px;
+    background: var(--bg3); border-bottom: 1px solid var(--border);
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.07em; text-transform: uppercase; color: var(--muted);
   }
-
   .proc-row {
     display: grid;
-    grid-template-columns: 2.5fr 90px 100px 100px 80px;
-    padding: 11px 20px;
+    grid-template-columns: 2fr 70px minmax(0,1fr) minmax(0,1fr) 80px;
+    column-gap: 16px;
+    padding: 10px 18px;
     border-bottom: 1px solid var(--border);
-    align-items: center;
-    transition: background 0.15s;
+    align-items: center; transition: background 0.15s;
   }
-
   .proc-row:last-child { border-bottom: none; }
   .proc-row:hover { background: var(--bg3); }
-
   .proc-name { font-weight: 400; color: var(--text); font-size: 12px; }
-  .proc-pid { color: var(--muted); font-size: 11px; }
-
-  .proc-vram-bar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .mini-track {
-    flex: 1;
-    height: 4px;
-    background: var(--bg0);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-
-  .mini-fill {
-    height: 100%;
-    border-radius: 2px;
-    background: var(--blue);
-  }
-
-  .proc-mb { font-size: 11px; color: var(--muted); }
-
+  .proc-pid  { color: var(--muted); font-size: 11px; }
+  .proc-bar-wrap { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .mini-track { flex: 1; height: 4px; background: var(--bg0); border-radius: 2px; overflow: hidden; }
+  .mini-fill-gpu { height: 100%; border-radius: 2px; background: var(--blue); }
+  .mini-fill-cpu { height: 100%; border-radius: 2px; background: var(--teal); }
+  .proc-val { font-size: 11px; color: var(--muted); white-space: nowrap; flex-shrink: 0; }
   .badge {
-    display: inline-block;
-    padding: 2px 9px;
-    border-radius: 4px;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-size: 10px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase;
   }
-
-  .badge-run { background: var(--green-dim); color: var(--green); border: 1px solid rgba(74,222,128,0.15); }
-  .badge-idle { background: var(--bg3); color: var(--muted); }
-
-  .empty-procs {
-    padding: 24px 20px;
-    color: var(--muted);
-    font-size: 12px;
-    text-align: center;
-  }
+  .badge-gpu { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(96,165,250,0.15); }
+  .badge-cpu { background: var(--teal-dim); color: var(--teal); border: 1px solid rgba(45,212,191,0.15); }
+  .empty-procs { padding: 20px 18px; color: var(--muted); font-size: 12px; text-align: center; }
 
   /* ── Footer ── */
   .footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-top: 16px;
-    border-top: 1px solid var(--border);
-    font-size: 11px;
-    color: var(--dim);
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 14px; border-top: 1px solid var(--border);
+    font-size: 11px; color: var(--dim);
   }
-
   #last-update { color: var(--muted); }
+
+  /* ── Spacer ── */
+  .gap { margin-bottom: 18px; }
 </style>
 </head>
 <body>
 <div class="shell">
 
-  <!-- Header -->
+  <!-- Topbar -->
   <div class="topbar">
     <div class="topbar-left">
       <div class="logo-box">
@@ -415,94 +290,150 @@
     </div>
   </div>
 
-  <!-- Metric cards -->
+  <!-- ═══ GPU SECTION ═══ -->
+  <div class="section-label">GPU</div>
+
   <div class="cards">
     <div class="card">
-      <div class="card-accent" style="background: var(--green);"></div>
+      <div class="card-accent" style="background:var(--green)"></div>
       <div class="card-label">GPU Utilisation</div>
-      <div class="card-value" id="c-util" style="color: var(--green);">—%</div>
-      <div class="card-sub" id="c-util-sub">—</div>
-      <div class="card-bar"><div class="card-bar-fill" id="bar-util" style="background: var(--green); width: 0%;"></div></div>
+      <div class="card-value" id="g-util" style="color:var(--green)">—%</div>
+      <div class="card-sub" id="g-util-sub">—</div>
+      <div class="card-bar"><div class="card-bar-fill" id="gb-util" style="background:var(--green);width:0%"></div></div>
     </div>
     <div class="card">
-      <div class="card-accent" style="background: var(--amber);"></div>
+      <div class="card-accent" style="background:var(--amber)"></div>
       <div class="card-label">Temperature</div>
-      <div class="card-value" id="c-temp" style="color: var(--amber);">—°C</div>
-      <div class="card-sub" id="c-fan">Fan —%</div>
-      <div class="card-bar"><div class="card-bar-fill" id="bar-temp" style="background: var(--amber); width: 0%;"></div></div>
+      <div class="card-value" id="g-temp" style="color:var(--amber)">—°C</div>
+      <div class="card-sub" id="g-temp-sub">—</div>
+      <div class="card-bar"><div class="card-bar-fill" id="gb-temp" style="background:var(--amber);width:0%"></div></div>
     </div>
     <div class="card">
-      <div class="card-accent" style="background: var(--blue);"></div>
+      <div class="card-accent" style="background:var(--blue)"></div>
       <div class="card-label">VRAM</div>
-      <div class="card-value" id="c-vram" style="color: var(--blue);">— GB</div>
-      <div class="card-sub" id="c-vram-sub">of — GB</div>
-      <div class="card-bar"><div class="card-bar-fill" id="bar-vram" style="background: var(--blue); width: 0%;"></div></div>
+      <div class="card-value" id="g-vram" style="color:var(--blue)">— GB</div>
+      <div class="card-sub" id="g-vram-sub">—</div>
+      <div class="card-bar"><div class="card-bar-fill" id="gb-vram" style="background:var(--blue);width:0%"></div></div>
     </div>
     <div class="card">
-      <div class="card-accent" style="background: var(--red);"></div>
+      <div class="card-accent" style="background:var(--red)"></div>
       <div class="card-label">Power Draw</div>
-      <div class="card-value" id="c-power" style="color: var(--red);">—W</div>
-      <div class="card-sub" id="c-power-sub">limit — W</div>
-      <div class="card-bar"><div class="card-bar-fill" id="bar-power" style="background: var(--red); width: 0%;"></div></div>
+      <div class="card-value" id="g-power" style="color:var(--red)">—W</div>
+      <div class="card-sub" id="g-power-sub">—</div>
+      <div class="card-bar"><div class="card-bar-fill" id="gb-power" style="background:var(--red);width:0%"></div></div>
     </div>
   </div>
 
-  <!-- Charts row -->
-  <div class="charts-row">
-    <div class="panel">
-      <div class="panel-header">
-        <span class="panel-title">GPU Utilisation · 120s</span>
-        <span class="panel-value" id="ph-util" style="color: var(--green);">—%</span>
-      </div>
-      <div class="chart-wrap"><canvas id="chartUtil" role="img" aria-label="GPU utilisation over last 120 seconds">GPU utilisation history.</canvas></div>
+  <!-- ═══ CPU SECTION ═══ -->
+  <div class="section-label" style="margin-top:18px">CPU</div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-accent" style="background:var(--teal)"></div>
+      <div class="card-label">CPU Utilisation</div>
+      <div class="card-value" id="c-util" style="color:var(--teal)">—%</div>
+      <div class="card-sub" id="c-util-sub">—</div>
+      <div class="card-bar"><div class="card-bar-fill" id="cb-util" style="background:var(--teal);width:0%"></div></div>
     </div>
-    <div class="panel">
-      <div class="panel-header">
-        <span class="panel-title">Temperature · 120s</span>
-        <span class="panel-value" id="ph-temp" style="color: var(--amber);">—°C</span>
-      </div>
-      <div class="chart-wrap"><canvas id="chartTemp" role="img" aria-label="GPU temperature over last 120 seconds">Temperature history.</canvas></div>
+    <div class="card">
+      <div class="card-accent" style="background:var(--orange)"></div>
+      <div class="card-label">CPU Temp</div>
+      <div class="card-value" id="c-temp" style="color:var(--orange)">—</div>
+      <div class="card-sub" id="c-temp-sub">—</div>
+      <div class="card-bar"><div class="card-bar-fill" id="cb-temp" style="background:var(--orange);width:0%"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-accent" style="background:var(--purple)"></div>
+      <div class="card-label">RAM</div>
+      <div class="card-value" id="c-ram" style="color:var(--purple)">— GB</div>
+      <div class="card-sub" id="c-ram-sub">—</div>
+      <div class="card-bar"><div class="card-bar-fill" id="cb-ram" style="background:var(--purple);width:0%"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-accent" style="background:var(--teal)"></div>
+      <div class="card-label">Clock Speed</div>
+      <div class="card-value" id="c-freq" style="color:var(--teal)">— MHz</div>
+      <div class="card-sub" id="c-freq-sub">—</div>
+      <div class="card-bar"><div class="card-bar-fill" id="cb-freq" style="background:var(--teal);width:0%"></div></div>
     </div>
   </div>
 
-  <!-- Details row -->
-  <div class="details-row">
-    <!-- Subsystems -->
+  <!-- ═══ CHARTS (side by side) ═══ -->
+  <div class="section-label" style="margin-top:18px">Activity · 120s</div>
+
+  <div class="charts-row gap">
     <div class="panel">
-      <div class="panel-header"><span class="panel-title">Subsystem usage</span></div>
+      <div class="panel-header">
+        <span class="panel-title">GPU Utilisation</span>
+        <span class="panel-value" id="ph-gutil" style="color:var(--green)">—%</span>
+      </div>
+      <div class="chart-wrap"><canvas id="chartGpuUtil"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">CPU Utilisation</span>
+        <span class="panel-value" id="ph-cutil" style="color:var(--teal)">—%</span>
+      </div>
+      <div class="chart-wrap"><canvas id="chartCpuUtil"></canvas></div>
+    </div>
+  </div>
+
+  <div class="charts-row gap">
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">GPU Temperature</span>
+        <span class="panel-value" id="ph-gtemp" style="color:var(--amber)">—°C</span>
+      </div>
+      <div class="chart-wrap"><canvas id="chartGpuTemp"></canvas></div>
+    </div>
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">RAM Usage</span>
+        <span class="panel-value" id="ph-cram" style="color:var(--purple)">—%</span>
+      </div>
+      <div class="chart-wrap"><canvas id="chartRam"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ═══ DETAILS ═══ -->
+  <div class="section-label">Details</div>
+
+  <div class="details-row gap">
+    <!-- GPU subsystems -->
+    <div class="panel">
+      <div class="panel-header"><span class="panel-title">GPU Subsystems</span></div>
       <div class="subsys-list">
         <div class="subsys-item">
           <span class="subsys-label">CUDA cores</span>
-          <div class="track"><div class="fill" id="ss-cuda" style="background: var(--green); width: 0%;"></div></div>
-          <span class="subsys-val" id="sv-cuda" style="color: var(--green);">—%</span>
+          <div class="track"><div class="fill" id="ss-cuda" style="background:var(--green);width:0%"></div></div>
+          <span class="subsys-val" id="sv-cuda" style="color:var(--green)">—%</span>
         </div>
         <div class="subsys-item">
           <span class="subsys-label">Memory BW</span>
-          <div class="track"><div class="fill" id="ss-membw" style="background: var(--blue); width: 0%;"></div></div>
-          <span class="subsys-val" id="sv-membw" style="color: var(--blue);">—%</span>
+          <div class="track"><div class="fill" id="ss-membw" style="background:var(--blue);width:0%"></div></div>
+          <span class="subsys-val" id="sv-membw" style="color:var(--blue)">—%</span>
         </div>
         <div class="subsys-item">
           <span class="subsys-label">VRAM used</span>
-          <div class="track"><div class="fill" id="ss-vram" style="background: var(--blue); width: 0%;"></div></div>
-          <span class="subsys-val" id="sv-vram" style="color: var(--blue);">— GB</span>
+          <div class="track"><div class="fill" id="ss-vram" style="background:var(--blue);width:0%"></div></div>
+          <span class="subsys-val" id="sv-vram" style="color:var(--blue)">— GB</span>
         </div>
         <div class="subsys-item">
           <span class="subsys-label">Power</span>
-          <div class="track"><div class="fill" id="ss-power" style="background: var(--red); width: 0%;"></div></div>
-          <span class="subsys-val" id="sv-power" style="color: var(--red);">—W</span>
+          <div class="track"><div class="fill" id="ss-power" style="background:var(--red);width:0%"></div></div>
+          <span class="subsys-val" id="sv-power" style="color:var(--red)">—W</span>
         </div>
         <div class="subsys-item">
           <span class="subsys-label">Temperature</span>
-          <div class="track"><div class="fill" id="ss-temp" style="background: var(--amber); width: 0%;"></div></div>
-          <span class="subsys-val" id="sv-temp" style="color: var(--amber);">—°C</span>
+          <div class="track"><div class="fill" id="ss-temp" style="background:var(--amber);width:0%"></div></div>
+          <span class="subsys-val" id="sv-temp" style="color:var(--amber)">—°C</span>
         </div>
-
       </div>
     </div>
 
-    <!-- Clock & system info -->
+    <!-- GPU clock & system -->
     <div class="panel">
-      <div class="panel-header"><span class="panel-title">Clock &amp; System</span></div>
+      <div class="panel-header"><span class="panel-title">GPU Clock &amp; System</span></div>
       <div class="info-grid">
         <div class="info-item">
           <div class="info-item-label">GPU Clock</div>
@@ -525,194 +456,311 @@
           <div class="info-item-val" id="inf-powlim">— W</div>
         </div>
         <div class="info-item">
-          <div class="info-item-label">Processes</div>
-          <div class="info-item-val" id="inf-procs">—</div>
+          <div class="info-item-label">GPU Processes</div>
+          <div class="info-item-val" id="inf-gpuprocs">—</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Process table -->
+  <div class="details-row gap">
+    <!-- Per-core CPU -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title">Per-core Utilisation</span>
+        <span class="panel-value" id="ph-cores" style="color:var(--teal)">— cores</span>
+      </div>
+      <div class="core-grid" id="core-grid"></div>
+    </div>
+
+    <!-- CPU system info -->
+    <div class="panel">
+      <div class="panel-header"><span class="panel-title">CPU System</span></div>
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-item-label">CPU Clock</div>
+          <div class="info-item-val" id="inf-cpuclk">— MHz</div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-label">Max Clock</div>
+          <div class="info-item-val" id="inf-cpumax">— MHz</div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-label">Logical Cores</div>
+          <div class="info-item-val" id="inf-lcores">—</div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-label">Physical Cores</div>
+          <div class="info-item-val" id="inf-pcores">—</div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-label">RAM Total</div>
+          <div class="info-item-val" id="inf-ramtot">— GB</div>
+        </div>
+        <div class="info-item">
+          <div class="info-item-label">RAM Available</div>
+          <div class="info-item-val" id="inf-ramavail">— GB</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PROCESS TABLE ═══ -->
+  <div class="section-label">Processes</div>
+
   <div class="proc-panel">
     <div class="proc-head">
       <span>Process</span>
       <span>PID</span>
-      <span>VRAM used</span>
-      <span>Share</span>
-      <span>Status</span>
+      <span>GPU VRAM</span>
+      <span>CPU RAM</span>
+      <span>Type</span>
     </div>
     <div id="proc-body"></div>
   </div>
 
   <!-- Footer -->
   <div class="footer">
-    <span>gpu-monitor · FastAPI + nvidia-smi</span>
+    <span>gpu-monitor · FastAPI + nvidia-smi + psutil</span>
     <span id="last-update">—</span>
   </div>
 
 </div>
 
 <script>
-  // ── Chart setup ──
+  // ── Chart factory ──
   function makeChart(id, color) {
     const ctx = document.getElementById(id).getContext('2d');
+    const rgb = getComputedStyle(document.documentElement)
+      .getPropertyValue(color).trim();
     return new Chart(ctx, {
       type: 'line',
       data: {
         labels: [],
         datasets: [{
           data: [],
-          borderColor: color,
+          borderColor: rgb,
           borderWidth: 1.5,
           pointRadius: 0,
           fill: true,
-          backgroundColor: color.replace(')', ', 0.07)').replace('rgb', 'rgba'),
+          backgroundColor: rgb.replace('rgb(', 'rgba(').replace(')', ', 0.07)'),
           tension: 0.4,
         }]
       },
       options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        animation: { duration: 400 },
+        responsive: true, maintainAspectRatio: false,
+        animation: { duration: 300 },
         plugins: { legend: { display: false }, tooltip: { enabled: false } },
         scales: {
           x: {
-            ticks: {
-              font: { family: "'JetBrains Mono', monospace", size: 9 },
-              color: '#3a3f47',
-              maxTicksLimit: 5,
-              autoSkip: true,
-              maxRotation: 0,
-            },
-            grid: { color: 'rgba(255,255,255,0.03)', drawBorder: false },
-            border: { display: false },
+            ticks: { font: { family: "'JetBrains Mono'", size: 9 }, color: '#3a3f47', maxTicksLimit: 5, autoSkip: true, maxRotation: 0 },
+            grid: { color: 'rgba(255,255,255,0.03)' }, border: { display: false },
           },
           y: {
-            ticks: {
-              font: { family: "'JetBrains Mono', monospace", size: 9 },
-              color: '#3a3f47',
-              maxTicksLimit: 4,
-            },
-            grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
-            border: { display: false },
+            ticks: { font: { family: "'JetBrains Mono'", size: 9 }, color: '#3a3f47', maxTicksLimit: 4 },
+            grid: { color: 'rgba(255,255,255,0.04)' }, border: { display: false },
           }
         }
       }
     });
   }
 
-  const chartUtil = makeChart('chartUtil', '#4ade80');
-  const chartTemp = makeChart('chartTemp', '#fbbf24');
+  // We pass CSS var names; resolve after DOM ready
+  const chartGpuUtil = makeChart('chartGpuUtil', '--green');
+  const chartCpuUtil = makeChart('chartCpuUtil', '--teal');
+  const chartGpuTemp = makeChart('chartGpuTemp', '--amber');
+  const chartRam     = makeChart('chartRam',     '--purple');
+
+  // Fix: Chart.js won't read CSS vars as colors — patch manually
+  const C = { green:'#4ade80', teal:'#2dd4bf', amber:'#fbbf24', purple:'#a78bfa' };
+  function patchChart(chart, hex) {
+    chart.data.datasets[0].borderColor = hex;
+    chart.data.datasets[0].backgroundColor = hex + '12';
+  }
+  patchChart(chartGpuUtil, C.green);
+  patchChart(chartCpuUtil, C.teal);
+  patchChart(chartGpuTemp, C.amber);
+  patchChart(chartRam,     C.purple);
 
   // ── Helpers ──
-  function pct(v, max) { return Math.min(100, Math.round(v / max * 100)); }
-  function mb2gb(mb) { return (mb / 1024).toFixed(1); }
-  function tempColor(t) { return t >= 85 ? '#f87171' : t >= 70 ? '#fbbf24' : '#4ade80'; }
-  function utilColor(u) { return u >= 90 ? '#f87171' : u >= 70 ? '#fbbf24' : '#4ade80'; }
-  function set(id, v) { const el = document.getElementById(id); if (el) el.textContent = v; }
-  function setW(id, pctVal) {
-    const el = document.getElementById(id);
-    if (el) el.style.width = Math.max(0, Math.min(100, pctVal)) + '%';
-  }
+  function pct(v, max) { return max > 0 ? Math.min(100, Math.round(v / max * 100)) : 0; }
+  function mb2gb(mb)   { return (mb / 1024).toFixed(1); }
+  function tempColor(t){ return t >= 85 ? '#f87171' : t >= 70 ? '#fbbf24' : '#4ade80'; }
+  function utilColor(u){ return u >= 90 ? '#f87171' : u >= 70 ? '#fbbf24' : '#4ade80'; }
+  function cpuUtilColor(u){ return u >= 90 ? '#f87171' : u >= 70 ? '#fbbf24' : '#2dd4bf'; }
+  function set(id, v)  { const el = document.getElementById(id); if (el) el.textContent = v; }
+  function setW(id, p) { const el = document.getElementById(id); if (el) el.style.width = Math.max(0,Math.min(100,p))+'%'; }
 
-  function updateChart(chart, data, yMax) {
+  function updateChart(chart, data, yMin, yMax) {
     const n = data.length;
     chart.data.labels = data.map((_, i) => {
-      const sAgo = n - 1 - i;
-      return sAgo === 0 ? 'now' : sAgo % 30 === 0 ? `-${sAgo}s` : '';
+      const s = n - 1 - i;
+      return s === 0 ? 'now' : s % 30 === 0 ? `-${s}s` : '';
     });
     chart.data.datasets[0].data = data;
-    if (yMax) chart.options.scales.y.max = yMax;
+    if (yMin !== undefined) chart.options.scales.y.min = yMin;
+    if (yMax !== undefined) chart.options.scales.y.max = yMax;
     chart.update('none');
   }
 
-  // ── Fetch & render ──
+  // ── Per-core renderer ──
+  function renderCores(cores) {
+    const grid = document.getElementById('core-grid');
+    if (!cores || !cores.length) { grid.innerHTML = ''; return; }
+    grid.innerHTML = cores.map((pct, i) => {
+      const col = pct >= 90 ? '#f87171' : pct >= 70 ? '#fbbf24' : '#2dd4bf';
+      return `<div class="core-cell">
+        <div class="core-num">C${i}</div>
+        <div class="core-bar-track"><div class="core-bar-fill" style="width:${pct}%;background:${col}"></div></div>
+        <div class="core-pct" style="color:${col}">${pct}%</div>
+      </div>`;
+    }).join('');
+  }
+
+  // ── Main refresh ──
   async function refresh() {
     try {
       const res = await fetch('/api/metrics');
       if (!res.ok) return;
       const d = await res.json();
-      const g = d.latest;
-      const h = d.history;
+      const g  = d.gpu  || {};
+      const c  = d.cpu  || {};
+      const gh = d.gpu_history || {};
+      const ch = d.cpu_history || {};
 
-      if (!g || !g.name) return;
+      // ── GPU Cards ──
+      if (g.name) {
+        document.getElementById('gpu-name').textContent = g.name;
+        document.getElementById('driver-ver').textContent = g.driver || '—';
 
-      // Header
-      document.getElementById('gpu-name').textContent = g.name;
-      document.getElementById('driver-ver').textContent = g.driver;
+        const uc = utilColor(g.util_gpu);
+        set('g-util', g.util_gpu + '%');
+        document.getElementById('g-util').style.color = uc;
+        set('g-util-sub', 'memory ctrl ' + g.util_mem + '%');
+        setW('gb-util', g.util_gpu);
 
-      // Cards
-      const uc = utilColor(g.util_gpu);
-      document.getElementById('c-util').textContent = g.util_gpu + '%';
-      document.getElementById('c-util').style.color = uc;
-      document.getElementById('c-util-sub').textContent = 'memory ctrl ' + g.util_mem + '%';
-      setW('bar-util', g.util_gpu);
+        const tc = tempColor(g.temp);
+        set('g-temp', g.temp + '°C');
+        document.getElementById('g-temp').style.color = tc;
+        document.getElementById('gb-temp').style.background = tc;
+        set('g-temp-sub', g.clock_gpu_mhz ? g.clock_gpu_mhz.toLocaleString() + ' MHz core' : '—');
+        setW('gb-temp', pct(g.temp, 100));
 
-      const tc = tempColor(g.temp);
-      document.getElementById('c-temp').textContent = g.temp + '°C';
-      document.getElementById('c-temp').style.color = tc;
-      document.getElementById('c-fan').textContent = '';
-      setW('bar-temp', pct(g.temp, 100));
+        const vramPct = pct(g.mem_used_mb, g.mem_total_mb);
+        set('g-vram', mb2gb(g.mem_used_mb) + ' GB');
+        set('g-vram-sub', 'of ' + mb2gb(g.mem_total_mb) + ' GB · ' + vramPct + '%');
+        setW('gb-vram', vramPct);
 
-      const vramPct = pct(g.mem_used_mb, g.mem_total_mb);
-      document.getElementById('c-vram').textContent = mb2gb(g.mem_used_mb) + ' GB';
-      document.getElementById('c-vram-sub').textContent = 'of ' + mb2gb(g.mem_total_mb) + ' GB · ' + vramPct + '%';
-      setW('bar-vram', vramPct);
+        const powerPct = g.power_limit > 0 ? pct(g.power_draw, g.power_limit) : 100;
+        set('g-power', Math.round(g.power_draw) + 'W');
+        set('g-power-sub', g.power_limit > 0 ? 'limit ' + Math.round(g.power_limit) + 'W · ' + powerPct + '%' : 'TDP unavailable');
+        setW('gb-power', powerPct);
 
-      const powerPct = g.power_limit > 0 ? pct(g.power_draw, g.power_limit) : 100;
-      document.getElementById('c-power').textContent = Math.round(g.power_draw) + 'W';
-      document.getElementById('c-power-sub').textContent = g.power_limit > 0 ? 'limit ' + Math.round(g.power_limit) + ' W · ' + powerPct + '%' : 'TDP limit unavailable';
-      setW('bar-power', powerPct);
+        // GPU subsystems
+        setW('ss-cuda',  g.util_gpu);  set('sv-cuda',  g.util_gpu + '%');
+        setW('ss-membw', g.util_mem);  set('sv-membw', g.util_mem + '%');
+        setW('ss-vram',  vramPct);     set('sv-vram',  mb2gb(g.mem_used_mb) + ' GB');
+        setW('ss-power', powerPct);    set('sv-power', Math.round(g.power_draw) + 'W');
+        setW('ss-temp',  pct(g.temp, 100)); set('sv-temp', g.temp + '°C');
 
-      // Charts
-      document.getElementById('ph-util').textContent = g.util_gpu + '%';
-      document.getElementById('ph-temp').textContent = g.temp + '°C';
-      updateChart(chartUtil, h.util, 100);
-      updateChart(chartTemp, h.temp, Math.max(100, Math.max(...h.temp) + 10));
+        // GPU info
+        set('inf-gpuclk',  (g.clock_gpu_mhz || 0).toLocaleString() + ' MHz');
+        set('inf-memclk',  (g.clock_mem_mhz || 0).toLocaleString() + ' MHz');
+        set('inf-pcie',    'Gen ' + g.pcie_gen);
+        set('inf-vramtot', mb2gb(g.mem_total_mb) + ' GB');
+        set('inf-powlim',  g.power_limit > 0 ? Math.round(g.power_limit) + ' W' : 'N/A');
 
-      // Subsystems
-      setW('ss-cuda', g.util_gpu);
-      set('sv-cuda', g.util_gpu + '%');
-      setW('ss-membw', g.util_mem);
-      set('sv-membw', g.util_mem + '%');
-      setW('ss-vram', vramPct);
-      set('sv-vram', mb2gb(g.mem_used_mb) + ' GB');
-      setW('ss-power', powerPct);
-      set('sv-power', Math.round(g.power_draw) + 'W');
-      setW('ss-temp', pct(g.temp, 100));
-      set('sv-temp', g.temp + '°C');
+        // GPU charts
+        set('ph-gutil', g.util_gpu + '%');
+        set('ph-gtemp', g.temp + '°C');
+        if (gh.util) updateChart(chartGpuUtil, gh.util, 0, 100);
+        if (gh.temp) updateChart(chartGpuTemp, gh.temp, Math.max(0, Math.min(...gh.temp) - 5), Math.max(100, Math.max(...gh.temp) + 5));
+      }
 
-      // Info grid
-      set('inf-gpuclk', g.clock_gpu_mhz.toLocaleString() + ' MHz');
-      set('inf-memclk', g.clock_mem_mhz.toLocaleString() + ' MHz');
-      set('inf-pcie', 'Gen ' + g.pcie_gen);
-      set('inf-vramtot', mb2gb(g.mem_total_mb) + ' GB');
-      set('inf-powlim', g.power_limit > 0 ? Math.round(g.power_limit) + ' W' : 'N/A');
+      // ── CPU Cards ──
+      if (c.cpu_util !== undefined) {
+        const cuc = cpuUtilColor(c.cpu_util);
+        set('c-util', c.cpu_util + '%');
+        document.getElementById('c-util').style.color = cuc;
+        set('c-util-sub', (c.cpu_count || '—') + ' logical cores');
+        setW('cb-util', c.cpu_util);
 
-      // Processes
-      const procs = g.processes || [];
-      set('inf-procs', procs.length);
+        if (c.temp_available) {
+          const ctc = tempColor(c.cpu_temp);
+          set('c-temp', c.cpu_temp + '°C');
+          document.getElementById('c-temp').style.color = ctc;
+          document.getElementById('cb-temp').style.background = ctc;
+          set('c-temp-sub', 'via lm-sensors');
+          setW('cb-temp', pct(c.cpu_temp, 100));
+        } else {
+          set('c-temp', 'N/A');
+          set('c-temp-sub', 'sensor not available');
+          setW('cb-temp', 0);
+        }
+
+        set('c-ram', mb2gb(c.ram_used_mb) + ' GB');
+        set('c-ram-sub', 'of ' + mb2gb(c.ram_total_mb) + ' GB · ' + c.ram_pct + '%');
+        setW('cb-ram', c.ram_pct);
+
+        set('c-freq', (c.freq_mhz || 0).toLocaleString() + ' MHz');
+        set('c-freq-sub', c.freq_max_mhz > 0 ? 'max ' + (c.freq_max_mhz || 0).toLocaleString() + ' MHz' : 'current freq');
+        setW('cb-freq', c.freq_max_mhz > 0 ? pct(c.freq_mhz, c.freq_max_mhz) : 50);
+
+        // CPU info grid
+        set('inf-cpuclk',  (c.freq_mhz  || 0).toLocaleString() + ' MHz');
+        set('inf-cpumax',  c.freq_max_mhz > 0 ? (c.freq_max_mhz).toLocaleString() + ' MHz' : 'N/A');
+        set('inf-lcores',  c.cpu_count  || '—');
+        set('inf-pcores',  c.phys_count || '—');
+        set('inf-ramtot',  mb2gb(c.ram_total_mb) + ' GB');
+        set('inf-ramavail',mb2gb(c.ram_avail_mb) + ' GB');
+
+        // Per-core
+        set('ph-cores', (c.per_core || []).length + ' cores');
+        renderCores(c.per_core);
+
+        // CPU charts
+        set('ph-cutil', c.cpu_util + '%');
+        set('ph-cram',  c.ram_pct + '%');
+        if (ch.util) updateChart(chartCpuUtil, ch.util, 0, 100);
+        if (ch.ram)  updateChart(chartRam,     ch.ram,  0, 100);
+      }
+
+      // ── Merged process table ──
+      const gpuProcs = (g.processes || []);
+      const cpuProcs = (c.top_procs || []);
+      set('inf-gpuprocs', gpuProcs.length);
+
+      // Build unified list: GPU processes first, then top CPU procs not already listed
+      const gpuPids = new Set(gpuProcs.map(p => String(p.pid)));
+      const allProcs = [
+        ...gpuProcs.map(p => ({ ...p, type: 'gpu' })),
+        ...cpuProcs.filter(p => !gpuPids.has(String(p.pid))).map(p => ({ ...p, type: 'cpu' })),
+      ];
+
       const tbody = document.getElementById('proc-body');
-      if (procs.length === 0) {
-        tbody.innerHTML = '<div class="empty-procs">No compute processes detected</div>';
+      if (!allProcs.length) {
+        tbody.innerHTML = '<div class="empty-procs">No active processes detected</div>';
       } else {
-        tbody.innerHTML = procs.map(p => {
-          const sharePct = g.mem_total_mb > 0 ? Math.round(p.vram_mb / g.mem_total_mb * 100) : 0;
+        tbody.innerHTML = allProcs.map(p => {
+          const vramPctP = g.mem_total_mb > 0 && p.vram_mb ? Math.round(p.vram_mb / g.mem_total_mb * 100) : 0;
+          const ramMb    = p.ram_mb || 0;
+          const isGpu    = p.type === 'gpu';
           return `<div class="proc-row">
             <span class="proc-name">${p.name}</span>
             <span class="proc-pid">${p.pid}</span>
-            <div class="proc-vram-bar">
-              <div class="mini-track"><div class="mini-fill" style="width:${sharePct}%"></div></div>
-              <span class="proc-mb">${mb2gb(p.vram_mb)} GB</span>
+            <div class="proc-bar-wrap">
+              ${isGpu ? `<div class="mini-track"><div class="mini-fill-gpu" style="width:${vramPctP}%"></div></div><span class="proc-val">${mb2gb(p.vram_mb || 0)} GB</span>` : `<span class="proc-val" style="color:var(--dim)">—</span>`}
             </div>
-            <span style="font-size:11px; color: var(--muted);">${sharePct}%</span>
-            <span><span class="badge badge-run">running</span></span>
+            <div class="proc-bar-wrap">
+              <div class="mini-track"><div class="mini-fill-cpu" style="width:${pct(ramMb, c.ram_total_mb)}%"></div></div>
+              <span class="proc-val">${ramMb > 0 ? mb2gb(ramMb) + ' GB' : '—'}</span>
+            </div>
+            <span><span class="badge ${isGpu ? 'badge-gpu' : 'badge-cpu'}">${isGpu ? 'GPU' : 'CPU'}</span></span>
           </div>`;
         }).join('');
       }
 
       set('last-update', 'updated ' + new Date().toLocaleTimeString());
-
     } catch(e) {
       console.error('fetch error', e);
     }
