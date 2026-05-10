@@ -155,11 +155,11 @@
   }
 
   .card-label {
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 500;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--muted);
+    color: #8f9aa6;
     margin-bottom: 10px;
   }
 
@@ -173,8 +173,8 @@
   }
 
   .card-sub {
-    font-size: 11px;
-    color: var(--muted);
+    font-size: 12.5px;
+    color: #8f9aa6;
   }
 
   .card-bar {
@@ -214,11 +214,11 @@
   }
 
   .panel-title {
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 500;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--muted);
+    color: #8f9aa6;
   }
 
   .panel-value {
@@ -249,7 +249,7 @@
     gap: 10px;
   }
 
-  .subsys-label { font-size: 11px; color: var(--muted); }
+  .subsys-label { font-size: 12px; color: #8f9aa6; }
 
   .track {
     height: 5px;
@@ -265,7 +265,7 @@
   }
 
   .subsys-val {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 500;
     text-align: right;
   }
@@ -284,9 +284,9 @@
   }
 
   .info-item-label {
-    font-size: 10px;
-    color: var(--muted);
-    letter-spacing: 0.08em;
+    font-size: 11px;
+    color: #8f9aa6;
+    letter-spacing: 0.07em;
     text-transform: uppercase;
     margin-bottom: 5px;
   }
@@ -312,11 +312,11 @@
     padding: 10px 20px;
     background: var(--bg3);
     border-bottom: 1px solid var(--border);
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 500;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.07em;
     text-transform: uppercase;
-    color: var(--muted);
+    color: #8f9aa6;
   }
 
   .proc-row {
@@ -496,11 +496,7 @@
           <div class="track"><div class="fill" id="ss-temp" style="background: var(--amber); width: 0%;"></div></div>
           <span class="subsys-val" id="sv-temp" style="color: var(--amber);">—°C</span>
         </div>
-        <div class="subsys-item">
-          <span class="subsys-label">Fan speed</span>
-          <div class="track"><div class="fill" id="ss-fan" style="background: var(--muted); width: 0%;"></div></div>
-          <span class="subsys-val" id="sv-fan" style="color: var(--muted);">—%</span>
-        </div>
+
       </div>
     </div>
 
@@ -655,7 +651,7 @@
       const tc = tempColor(g.temp);
       document.getElementById('c-temp').textContent = g.temp + '°C';
       document.getElementById('c-temp').style.color = tc;
-      document.getElementById('c-fan').textContent = g.fan_available ? 'Fan ' + g.fan_speed + '%' : 'Fan N/A (laptop GPU)';
+      document.getElementById('c-fan').textContent = '';
       setW('bar-temp', pct(g.temp, 100));
 
       const vramPct = pct(g.mem_used_mb, g.mem_total_mb);
@@ -685,8 +681,6 @@
       set('sv-power', Math.round(g.power_draw) + 'W');
       setW('ss-temp', pct(g.temp, 100));
       set('sv-temp', g.temp + '°C');
-      setW('ss-fan', g.fan_available ? g.fan_speed : 0);
-      set('sv-fan', g.fan_available ? g.fan_speed + '%' : 'N/A');
 
       // Info grid
       set('inf-gpuclk', g.clock_gpu_mhz.toLocaleString() + ' MHz');
