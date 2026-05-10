@@ -6,6 +6,12 @@ A modern, real-time NVIDIA GPU dashboard for Ubuntu. Runs as a native desktop ap
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-4ade80?style=flat&labelColor=111417&color=4ade80)
 ![License](https://img.shields.io/badge/License-MIT-4ade80?style=flat&labelColor=111417&color=4ade80)
 
+## Dashboard
+
+![GPU/CPU Monitor Dashboard](docs/dashboard.png)
+
+Live monitoring dashboard showing GPU and CPU utilisation, temperature, VRAM, RAM, per-core breakdown, and process table. Built with FastAPI + nvidia-smi + psutil.
+
 ## Features
 
 - Live GPU utilisation chart — 120 second rolling window
